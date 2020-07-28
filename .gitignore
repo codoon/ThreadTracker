@@ -1,0 +1,7 @@
+/.idea/
+/.gradle/4.10/
+/.gradle/vcs-1/
+/build/android-profile/
+/gradlew
+/gradlew.bat
+/ThreadTracker.iml

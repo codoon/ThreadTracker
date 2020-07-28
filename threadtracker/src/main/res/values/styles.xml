@@ -1,0 +1,8 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="ThreadTrackerAppTheme" parent="@android:style/Theme.NoTitleBar">
+
+    </style>
+
+</resources>

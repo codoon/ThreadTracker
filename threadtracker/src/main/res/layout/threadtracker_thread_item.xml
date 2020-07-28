@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/threadLayout"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#1100bc71">
+
+    <TextView
+        android:id="@+id/threadState"
+        android:layout_width="110dp"
+        android:layout_height="match_parent"
+        android:textColor="#ff2222ee"
+        android:gravity="center_vertical|right"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        tools:text="TIMED_WAITING"
+        android:textSize="12dp"
+        android:maxLines="2"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/threadName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/threadState"
+        android:textColor="#ff222222"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        tools:text="thread-4"
+        android:textSize="14dp"
+        android:maxLines="2"
+        android:ellipsize="end" />
+
+</RelativeLayout>

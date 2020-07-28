@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff">
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#ff00bc71"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="ThreadTracker"
+        android:textColor="#ffffffff"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/statisticsText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleText"
+        android:background="#ffeaf9ff"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        tools:text="total: 321 (exclude threads create by thread-tracker)"
+        android:textColor="#f444"
+        android:textSize="14dp"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/refreshBtn"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="13dp"
+        android:layout_marginRight="20dp"
+        android:background="@mipmap/threadtracker_refresh"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/refreshProgress"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="13dp"
+        android:layout_marginRight="20dp"
+        android:indeterminateDrawable="@drawable/threadtracker_refresh_progress"
+        android:indeterminateOnly="true" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/statisticsText" />
+
+</RelativeLayout>
