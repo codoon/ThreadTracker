@@ -21,7 +21,7 @@ import java.util.zip.ZipEntry
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES
 
 class ThreadTrackerTransform extends Transform implements Plugin<Project> {
-    private final String VERSION = "1.1.0"
+    private final String VERSION = "1.0.0"
 
     @Override
     void apply(Project project) {

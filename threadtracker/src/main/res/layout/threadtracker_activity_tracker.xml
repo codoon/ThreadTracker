@@ -52,10 +52,12 @@
         android:indeterminateDrawable="@drawable/threadtracker_refresh_progress"
         android:indeterminateOnly="true" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/statisticsText" />
+        android:layout_below="@id/statisticsText"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent"/>
 
 </RelativeLayout>

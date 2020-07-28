@@ -1,29 +1,71 @@
 package com.codoon.threadtracker.ui
 
+import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.BaseAdapter
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.codoon.threadthracker.R
 import com.codoon.threadtracker.bean.ShowInfo
 import com.codoon.threadtracker.toPx
 
-class TrackerAdapter(private var list: List<ShowInfo>, private val listener: OnItemClickListener) :
-    RecyclerView.Adapter<TrackerAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.threadtracker_thread_item, parent, false)
-        view.setOnClickListener {
-            listener.onItemClick(it)
+class TrackerAdapter(private var context: Context, private var list: List<ShowInfo>) :
+    BaseAdapter() {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        var holder: ViewHolder? = null
+        var returnView = convertView
+
+        returnView?.apply {
+            holder = tag as ViewHolder
+        } ?: apply {
+            returnView =
+                LayoutInflater.from(context).inflate(R.layout.threadtracker_thread_item, parent, false)?.also {
+                    holder = ViewHolder().apply {
+                        threadLayout = it.findViewById(R.id.threadLayout)
+                        threadName = it.findViewById(R.id.threadName)
+                        threadState = it.findViewById(R.id.threadState)
+                    }
+                    it.tag = holder
+                }
         }
-        return ViewHolder(view)
+        holder?.also { showItem(it, position) }
+        return returnView!!
     }
 
-    override fun getItemCount(): Int {
-        return list.size
+    private fun showItem(holder: ViewHolder, position: Int) {
+        val data = list[position];
+        when (data.type) {
+            ShowInfo.SINGLE_THREAD -> {
+                holder.threadLayout?.setBackgroundColor(Color.argb(0x00, 0x00, 0xbc, 0x71))
+                holder.threadName?.text = data.threadName
+                holder.threadState?.text = data.threadState.name
+                holder.threadName?.setPadding(0, 0, 0, 0)
+                holder.threadState?.visibility = View.VISIBLE
+            }
+            ShowInfo.POOL -> {
+                holder.threadLayout?.setBackgroundColor(Color.argb(0x20, 0x00, 0xbc, 0x71))
+                holder.threadName?.text = data.poolName
+                holder.threadState?.visibility = View.GONE
+                holder.threadName?.setPadding(0, 0, 0, 0)
+            }
+            ShowInfo.POOL_THREAD -> {
+                holder.threadLayout?.setBackgroundColor(Color.argb(0x00, 0x00, 0xbc, 0x71))
+                holder.threadName?.text = data.threadName
+                holder.threadState?.text = data.threadState.name
+                holder.threadName?.apply {
+                    setPadding(20.toPx(context), paddingTop, paddingRight, paddingBottom)
+                }
+                holder.threadState?.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    override fun getItem(position: Int): Any {
+        return list[position]
     }
 
     fun getItemList(): List<ShowInfo> {
@@ -35,42 +77,18 @@ class TrackerAdapter(private var list: List<ShowInfo>, private val listener: OnI
         notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val data = list[position]
-        when (data.type) {
-            ShowInfo.SINGLE_THREAD -> {
-                holder.threadLayout.setBackgroundColor(Color.argb(0x00, 0x00, 0xbc, 0x71))
-                holder.threadName.text = data.threadName
-                holder.threadState.text = data.threadState.name
-                holder.threadName.setPadding(0, 0, 0, 0)
-                holder.threadState.visibility = View.VISIBLE
-            }
-            ShowInfo.POOL -> {
-                holder.threadLayout.setBackgroundColor(Color.argb(0x20, 0x00, 0xbc, 0x71))
-                holder.threadName.text = data.poolName
-                holder.threadState.visibility = View.GONE
-                holder.threadName.setPadding(0, 0, 0, 0)
-            }
-            ShowInfo.POOL_THREAD -> {
-                holder.threadLayout.setBackgroundColor(Color.argb(0x00, 0x00, 0xbc, 0x71))
-                holder.threadName.text = data.threadName
-                holder.threadState.text = data.threadState.name
-                holder.threadName.apply {
-                    setPadding(20.toPx(context), paddingTop, paddingRight, paddingBottom)
-                }
-                holder.threadState.visibility = View.VISIBLE
-            }
-        }
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
+    override fun getCount(): Int {
+        return list.size
+    }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val threadLayout: RelativeLayout = itemView.findViewById(R.id.threadLayout)
-        val threadName: TextView = itemView.findViewById(R.id.threadName)
-        val threadState: TextView = itemView.findViewById(R.id.threadState)
+    internal class ViewHolder {
+        var threadLayout: RelativeLayout? = null
+        var threadName: TextView? = null
+        var threadState: TextView? = null
     }
 }
 
-interface OnItemClickListener {
-    fun onItemClick(view: View)
-}

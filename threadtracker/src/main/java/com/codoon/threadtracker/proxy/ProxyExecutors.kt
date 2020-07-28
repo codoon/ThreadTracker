@@ -1,7 +1,6 @@
 package com.codoon.threadtracker.proxy
 
 import android.os.Build
-import androidx.annotation.RequiresApi
 import com.codoon.threadtracker.TrackerUtils.toObjectString
 import java.lang.reflect.Proxy
 import java.util.concurrent.*
@@ -24,17 +23,23 @@ object ProxyExecutors {
         // return proxy(Executors.newFixedThreadPool(nThreads))
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @JvmStatic
     fun newWorkStealingPool(parallelism: Int): ExecutorService {
         // todo ForkJoinPool 暂时没有TBaseForkJoinPool
-        return proxy(Executors.newWorkStealingPool(parallelism))
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            proxy(Executors.newWorkStealingPool(parallelism))
+        } else {
+            throw RuntimeException("VERSION.SDK_INT < N")
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @JvmStatic
     fun newWorkStealingPool(): ExecutorService {
-        return proxy(Executors.newWorkStealingPool())
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            proxy(Executors.newWorkStealingPool())
+        } else {
+            throw RuntimeException("VERSION.SDK_INT < N")
+        }
     }
 
     @JvmStatic

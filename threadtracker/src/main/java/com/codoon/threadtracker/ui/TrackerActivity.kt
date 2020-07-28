@@ -6,8 +6,8 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Message
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.codoon.threadthracker.R
 import com.codoon.threadtracker.ThreadInfoManager
 import com.codoon.threadtracker.TrackerUtils.setStatusBarColor
@@ -37,17 +37,21 @@ class TrackerActivity : Activity() {
             refreshProgress.visibility = View.VISIBLE
             refreshHandler.sendEmptyMessage(1)
         }
-        val adapter = TrackerAdapter(emptyList(), object : OnItemClickListener {
-            override fun onItemClick(view: View) {
-                val position: Int = recyclerView.getChildAdapterPosition(view)
+        val adapter = TrackerAdapter(this, emptyList())
+        listView.adapter = adapter
+        listView.onItemClickListener = object : AdapterView.OnItemClickListener {
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 ThreadDetailsActivity.startDetailsActivity(
                     this@TrackerActivity,
-                    (recyclerView.adapter as TrackerAdapter).getItemList()[position]
+                    (listView.adapter as TrackerAdapter).getItemList()[position]
                 )
             }
-        })
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        }
 
         refreshHandler.sendEmptyMessage(0)
     }
@@ -55,10 +59,9 @@ class TrackerActivity : Activity() {
     private fun refreshList(toast: Boolean) {
         val infoResult = ThreadInfoManager.INSTANCE.buildAllThreadInfo()
         runOnUiThread {
-            (recyclerView.adapter as TrackerAdapter).setItemList(infoResult.list)
+            (listView.adapter as TrackerAdapter).setItemList(infoResult.list)
             refreshBtn.visibility = View.VISIBLE
             refreshProgress.visibility = View.GONE
-            // statisticsText.text = "total: ${infoResult.totalNum}      system/unknown: ${infoResult.unknownNum}"
             if (toast) {
                 Toast.makeText(
                     this,

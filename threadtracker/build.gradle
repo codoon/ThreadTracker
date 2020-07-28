@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 10
-        versionName "1.1.0"
+        versionCode 1
+        versionName "1.0.0"
         consumerProguardFiles 'proguard-rules.pro'
     }
 
@@ -31,8 +31,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.startup:startup-runtime:1.0.0-alpha02'
 }
 
 uploadArchives {
@@ -42,7 +40,7 @@ uploadArchives {
             repository(url: uri('../repositories'))
             pom.groupId = 'com.codoon.threadtracker'
             pom.artifactId = 'threadtracker'
-            pom.version = '1.1.0'
+            pom.version = '1.0.0'
         }
     }
 }
@@ -52,7 +50,7 @@ publish {
     repoName = 'maven'
     groupId = 'com.codoon.threadtracker'
     artifactId = 'threadtracker'
-    publishVersion = '1.1.0'
+    publishVersion = '1.0.0'
     desc = 'thread tracing for android'
-    website = ''
+    website = 'https://github.com/codoon/ThreadTracker'
 }
