@@ -54,5 +54,5 @@ publish {
     artifactId = 'threadtracker'
     publishVersion = '1.1.0'
     desc = 'thread tracing for android'
-    website = ''
+    website = 'https://github.com/codoon/ThreadTracker'
 }
