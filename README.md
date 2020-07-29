@@ -22,7 +22,8 @@ ThreadTracker 致力于解决这样的问题：它可以方便的查看当前时
 <br/>
 <br/>
 ## 使用方式
-(jcenter 提交尚在审核中...)
+<font color=#ff0000>jcenter 提交尚在审核中...</font>
+<br/>
 首先需要 jcenter
 
     repositories {
