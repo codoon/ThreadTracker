@@ -1,2 +1,2 @@
 # ThreadTracker
-thread tracing for android
+ThreadTracker without androidx
