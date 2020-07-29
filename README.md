@@ -2,7 +2,7 @@
 Android 线程追踪工具
 
 ## 开发背景
-众所周知，Android 中每个线程都在自己独立的栈中运行，我们可以用 Thread.getAllStackTraces() 方法获取到栈信息但无法得知线程被启动原因。当我们做性能优化打开Profiler工具时，可能瞬间几百个线程映入眼帘，并且有很多无名线程，以致想去优化，却又无从下手。
+当项目规模越来越大时，经常会遇到线程数量暴涨问题。Android 中每个线程都在自己独立的栈中运行，我们虽可以用 Thread.getAllStackTraces() 方法获取到运行栈信息，但却无法得知线程被启动原因。当我们做性能优化打开Profiler工具时，可能瞬间映入眼帘几百个线程，甚至有很多都是无名线程，以致想去优化，却又无从下手。
 
 ThreadTracker 致力于解决这样的问题：它可以方便的查看当前时刻线程**被启动堆栈**、线程池**被创建堆栈**、线程池中的某线程当前正在执行的**task添加栈**（对于线程池来说，其中线程被启动的堆栈并不重要，这取决于线程池策略，重要的是线程正在执行的任务是在哪里被添加的）、以及线程-线程池之间的树状关系图，并**自动高亮**堆栈中用户代码，让您一眼看出问题根源。
 
@@ -10,9 +10,9 @@ ThreadTracker 致力于解决这样的问题：它可以方便的查看当前时
 ![](https://github.com/codoon/resource/blob/master/threadtracker/img/t1.jpg)
 ![](https://github.com/codoon/resource/blob/master/threadtracker/img/t2.jpg)
 
-\* 另外，当一个线程/线程池是被另一个子线程启动/创建，可以通过点击show detail追溯调用链，直到到达主线程为止。
+\* 另外，当一个线程/线程池是被另一个子线程启动/创建，可以通过点击 show detail 追溯调用链，直到到达主线程为止。
 
-\* 注：如果您需要追踪 ASyncTask 相关信息，请在 Android 5.0 及以上手机运行，4.x系统上对 ASyncTask 的 Hook 暂无法成功
+\* 注：如果您需要追踪 ASyncTask 相关信息，请在 Android 5.0 及以上手机运行，4.x 系统上对 ASyncTask 的 Hook 暂无法成功
 
 ## 实现原理
 正在写…
@@ -35,12 +35,12 @@ ThreadTracker 致力于解决这样的问题：它可以方便的查看当前时
 
     debugImplementation 'com.codoon.threadtracker:threadtracker:1.1.0'   
 
-打包后会多生成一个TreadTracker图标，打开即可使用。
+打包后会多生成一个 TreadTracker 图标，打开即可使用。
 
-\* 如果您的项目尚不支持androidx，可把以上version全部改成1.0.0；版本1.1.0及以后均需androidx支持。
+\* 如果您的项目尚不支持 androidx，可把以上 version 全部改成 1.0.0；版本 1.1.0 及以后均需 androidx 支持。
 
 ## Coming soon...
-* 统计三方jar包线程状态，看是谁在为所欲为
+* 统计三方 jar 包线程状态，看是谁在为所欲为
 * 按线程状态/类型筛选，按运行时间排序
 * 记录/恢复当前线程信息快照
 
