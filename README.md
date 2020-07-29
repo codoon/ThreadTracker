@@ -2,9 +2,9 @@
 Android 线程追踪工具
 
 ## 开发背景
-当项目规模越来越大时，经常会遇到线程数量暴涨问题。Android 中每个线程都在自己独立的栈中运行，我们虽可以用 Thread.getAllStackTraces() 方法获取到运行栈信息，但却无法得知线程被启动原因。当我们做性能优化打开Profiler工具时，可能瞬间映入眼帘几百个线程，甚至有很多都是无名线程，以致想去优化，却又无从下手。
+当项目规模越来越大时，经常会遇到线程数量暴涨问题。Android 中每个线程都在自己独立的栈中运行，我们虽可以用 Thread.getAllStackTraces() 方法获取到运行栈信息，但却无法得知线程被启动原因。当我们做性能优化打开 Profiler 工具时，可能瞬间映入眼帘几百个线程，甚至有很多都是无名线程，以致想去优化，却又无从下手。
 
-ThreadTracker 致力于解决这样的问题：它可以方便的查看当前时刻线程**被启动堆栈**、线程池**被创建堆栈**、线程池中的某线程当前正在执行的**task添加栈**（对于线程池来说，其中线程被启动的堆栈并不重要，这取决于线程池策略，重要的是线程正在执行的任务是在哪里被添加的）、以及线程-线程池之间的树状关系图，并**自动高亮**堆栈中用户代码，让您一眼看出问题根源。
+ThreadTracker 致力于解决这样的问题；它可以方便的查看当前时刻线程**被启动堆栈**、线程池**被创建堆栈**、线程池中的某线程当前正在执行的**task添加栈**（对于线程池来说，其中线程被启动的堆栈并不重要，这取决于线程池策略，重要的是线程正在执行的任务是在哪里被添加的）、以及线程-线程池之间的树状关系图，并**自动高亮**堆栈中用户代码，让您一眼看出问题根源。
 
 ## 效果演示
 ![](https://github.com/codoon/resource/blob/master/threadtracker/img/t1.jpg)
@@ -25,11 +25,11 @@ ThreadTracker 致力于解决这样的问题：它可以方便的查看当前时
         jcenter()
     }
     
-然后在您的 project gralde 的 dependencies 中添加：
+然后在您的 project gradle 的 dependencies 中添加：
 
     classpath "com.codoon.threadtracker:threadtracker-plugin:1.1.0"
         
-在您的 application gralde 中添加：
+在您的 application gradle 中添加：
 
     apply plugin: 'com.codoon.threadtracker'
 
