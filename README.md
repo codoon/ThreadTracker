@@ -12,7 +12,7 @@ ThreadTracker 致力于解决这样的问题：它可以方便的查看当前时
 
 \* 另外，当一个线程/线程池是被另一个子线程启动/创建，可以通过点击 show detail 追溯调用链，直到到达主线程为止。
 
-\* 注：如果您需要追踪 ASyncTask 相关信息，请在 Android 5.0 及以上手机运行，4.x 系统上对 ASyncTask 的 Hook 暂无法成功
+\* 注：如果您需要追踪 ASyncTask 相关信息，请在 Android 5.0 及以上手机运行，4.x 系统上对 ASyncTask 的 Hook 暂无法成功。
 
 ## 实现原理
 正在写…
