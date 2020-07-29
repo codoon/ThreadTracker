@@ -46,10 +46,12 @@ ThreadTracker 致力于解决这样的问题：它可以方便的查看当前时
 \* 如果您的项目尚不支持androidx，可把以上version全部改成1.0.0；版本1.1.0及以后均需androidx支持。
 <br/>
 <br/>
-## coming soon...
+## Coming soon...
 * 统计三方jar包线程状态，看是谁在为所欲为
 * 按线程状态/类型筛选，按运行时间排序
 * 记录/恢复当前线程信息快照
+<br/>
+<br/>
 ## 项目成员
 #### 发起者 / 负责人
 [zhanyongsheng](https://github.com/zhanyongsheng)
