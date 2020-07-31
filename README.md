@@ -15,7 +15,7 @@ ThreadTracker 致力于解决这样的问题；它可以方便的查看当前时
 \* 注：如果您需要追踪 ASyncTask 相关信息，请在 Android 5.0 及以上手机运行，4.x 系统上对 ASyncTask 的 Hook 暂无法成功。
 
 ## 实现原理
-正在写…
+https://juejin.im/post/6855586076132655118/
 
 ## 使用方式
 
