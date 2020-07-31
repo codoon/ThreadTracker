@@ -7,8 +7,8 @@ Android 线程追踪工具
 ThreadTracker 致力于解决这样的问题；它可以方便的查看当前时刻线程**被启动堆栈**、线程池**被创建堆栈**、线程池中的某线程当前正在执行的**task添加栈**（对于线程池来说，其中线程被启动的堆栈并不重要，这取决于线程池策略，重要的是线程正在执行的任务是在哪里被添加的）、以及线程-线程池之间的树状关系图，并**自动高亮**堆栈中用户代码，让您一眼看出问题根源。
 
 ## 效果演示
-![](https://github.com/codoon/resource/blob/master/threadtracker/img/t1.jpg)
-![](https://github.com/codoon/resource/blob/master/threadtracker/img/t2.jpg)
+![主界面.jpg](https://upload-images.jianshu.io/upload_images/24284143-f057ebed55bcf008.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![详情.jpg](https://upload-images.jianshu.io/upload_images/24284143-a9624ebbcb6bccfa.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 另外，当一个线程/线程池是被另一个子线程启动/创建，可以通过点击 show detail 追溯调用链，直到到达主线程为止。
 
