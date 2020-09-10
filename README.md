@@ -44,10 +44,6 @@ https://juejin.im/post/6855586076132655118/
 * 按线程状态/类型筛选，按运行时间排序
 * 记录/恢复当前线程信息快照
 
-## 项目成员
-#### 发起者 / 负责人
-[zhanyongsheng](https://github.com/zhanyongsheng)
-
 ## 协议
 <img alt="Apache-2.0 license" src="https://www.apache.org/img/ASF20thAnniversary.jpg" width="128">
 ThreadTracker 基于 Apache-2.0 协议进行分发和使用。
