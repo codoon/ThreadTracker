@@ -226,9 +226,19 @@ class ThreadDetailsActivity : Activity() {
             if (indexTemp != -1) {
                 if (indexA == -1 || (indexTemp < indexA)) {
                     indexA = indexTemp
-                    indexZ = stack.indexOf("\n", startIndex = indexA)
-                    if (indexA == 0)
+                    var indexTempZ = stack.lastIndexOf(s)
+                    indexTempZ = stack.indexOf("\n", startIndex = indexTempZ)
+                    if (indexTempZ > indexZ) {
+                        indexZ = indexTempZ
+                    }
+                    if (indexA == 0){}
                         break
+                } else {
+                    var indexTempZ = stack.lastIndexOf(s)
+                    indexTempZ = stack.indexOf("\n", startIndex = indexTempZ)
+                    if (indexTempZ > indexZ) {
+                        indexZ = indexTempZ
+                    }
                 }
             }
         }
