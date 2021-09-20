@@ -25,11 +25,11 @@ class ThreadTrackerTransform extends Transform implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        System.out.println("hello ThreadTrackerPlugin")
+        System.out.println("hello ThreadTrackerPlugin:" + project.name)
         project.getRootProject().getSubprojects().each { subProject ->
             PluginUtils.addProjectName(subProject.name)
             PluginUtils.projectPathList.add(subProject.projectDir.toString())
-            // println "subProject path: $subProject.projectDir"
+             println "subProject path: $subProject.projectDir"
         }
 
         def android = project.extensions.getByType(AppExtension)
@@ -71,7 +71,7 @@ class ThreadTrackerTransform extends Transform implements Plugin<Project> {
         if (outputProvider != null)
             outputProvider.deleteAll()
 
-        println 'transform threads...'
+        println 'transform threads ...'
         JarInput threadtrackerJarInput = null
 
         inputs.each { TransformInput input ->
@@ -89,8 +89,8 @@ class ThreadTrackerTransform extends Transform implements Plugin<Project> {
                         throw new RuntimeException("version mismatching: please use com.codoon.threadtracker:threadtracker:" + VERSION)
                     }
                     threadtrackerJarInput = jarInput
-                } else {
-                    handleJarInputs(jarInput, outputProvider)
+                } else if (handleJarInputs(jarInput, outputProvider, false)) {
+                    threadtrackerJarInput = jarInput
                 }
             }
         }
@@ -98,7 +98,7 @@ class ThreadTrackerTransform extends Transform implements Plugin<Project> {
         // 最后处理threadtracker以便向UserPackage.java添加所有用户包名
         if (threadtrackerJarInput != null) {
             println 'build user package list...'
-            handleJarInputs(threadtrackerJarInput, outputProvider)
+            handleJarInputs(threadtrackerJarInput, outputProvider, true)
         } else {
             println 'error: threadtracker-transform failed'
             throw new RuntimeException("can't find threadtracker.jar: please implementation 'com.codoon.threadtracker:threadtracker:" + VERSION + "' in your application gradle file")
@@ -118,7 +118,7 @@ class ThreadTrackerTransform extends Transform implements Plugin<Project> {
                     // println '----------- class <' + name + '> -----------'
                     ClassReader classReader = new ClassReader(file.bytes)
                     ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
-                    ClassVisitor cv = new ThreadTrackerClassVisitor(classWriter, null)
+                    ClassVisitor cv = new ThreadTrackerClassVisitor(classWriter, true)
                     classReader.accept(cv, EXPAND_FRAMES)
                     byte[] code = classWriter.toByteArray()
                     FileOutputStream fos = new FileOutputStream(
@@ -136,7 +136,8 @@ class ThreadTrackerTransform extends Transform implements Plugin<Project> {
         FileUtils.copyDirectory(directoryInput.file, dest)
     }
 
-    static void handleJarInputs(JarInput jarInput, TransformOutputProvider outputProvider) {
+    // return true if the jarInput is threadtracker.jar
+    static boolean handleJarInputs(JarInput jarInput, TransformOutputProvider outputProvider,  boolean handleThreadTrackerJar) {
         if (jarInput.file.getAbsolutePath().endsWith(".jar")) {
             def jarName = jarInput.name
             // println '----------- jarName <' + jarName + '> -----------'
@@ -151,18 +152,31 @@ class ThreadTrackerTransform extends Transform implements Plugin<Project> {
                 tmpFile.delete()
             }
             JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(tmpFile))
-
+            boolean isThreadTrackerJar = false;
+            boolean isUserCode = false;
+            if (jarInput.getScopes().contains(QualifiedContent.Scope.PROJECT)
+                    || jarInput.getScopes().contains(QualifiedContent.Scope.SUB_PROJECTS)) {
+                isUserCode = true;
+            } else if (jarInput.file.absolutePath.contains("/transforms/ajx") && jarInput.name.equals("include")) {
+                // if aspectjx plugin is applied before this plugin
+                isUserCode = true;
+            }
             while (enumeration.hasMoreElements()) {
                 JarEntry jarEntry = (JarEntry) enumeration.nextElement()
                 String entryName = jarEntry.getName()
                 ZipEntry zipEntry = new ZipEntry(entryName)
                 InputStream inputStream = jarFile.getInputStream(jarEntry)
+                if (!handleThreadTrackerJar && entryName.contains("com/codoon/threadtracker/")) {
+                    isThreadTrackerJar = true
+                    println 'entryName:' + entryName + "," + jarInput.file.absolutePath
+                    break
+                }
                 // println '----------- jarClass <' + entryName + '> -----------'
                 if (checkClassFile(entryName, true)) {
                     jarOutputStream.putNextEntry(zipEntry)
                     ClassReader classReader = new ClassReader(IOUtils.toByteArray(inputStream))
                     ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
-                    ClassVisitor cv = new ThreadTrackerClassVisitor(classWriter, jarName)
+                    ClassVisitor cv = new ThreadTrackerClassVisitor(classWriter, isUserCode)
                     classReader.accept(cv, EXPAND_FRAMES)
                     byte[] code = classWriter.toByteArray()
                     jarOutputStream.write(code)
@@ -174,10 +188,14 @@ class ThreadTrackerTransform extends Transform implements Plugin<Project> {
             }
             jarOutputStream.close()
             jarFile.close()
+            if (isThreadTrackerJar && !handleThreadTrackerJar) {
+                return isThreadTrackerJar
+            }
             def dest = outputProvider.getContentLocation(jarName + md5Name,
                     jarInput.contentTypes, jarInput.scopes, Format.JAR)
             FileUtils.copyFile(tmpFile, dest)
             tmpFile.delete()
+            return false
         }
     }
 

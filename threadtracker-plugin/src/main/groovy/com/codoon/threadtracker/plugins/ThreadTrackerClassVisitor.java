@@ -20,11 +20,11 @@ class ThreadTrackerClassVisitor extends ClassVisitor implements Opcodes {
     private String className;
     private boolean changingSuper = false; // 是否处于改继承状态
     private boolean buildingPackage = false; // 是否处于建立用户可达代码包列表中
-    private String jarName = null; // 不是jar包则为空
+    private boolean isUserCode;
 
-    public ThreadTrackerClassVisitor(ClassVisitor cv, String jarName) {
+    public ThreadTrackerClassVisitor(ClassVisitor cv, boolean isUserCode) {
         super(Opcodes.ASM5, cv);
-        this.jarName = jarName;
+        this.isUserCode = isUserCode;
     }
 
     @Override
@@ -39,17 +39,12 @@ class ThreadTrackerClassVisitor extends ClassVisitor implements Opcodes {
         }
 
         // 用来获取用户可达代码的包名列表，用于调用栈内高亮显示
-        if (jarName != null && className.contains("com/codoon/threadtracker")) {
+        if (!isUserCode && className.contains("com/codoon/threadtracker")) {
             if (className.equals("com/codoon/threadtracker/UserPackage")) {
                 buildingPackage = true;
             }
         } else {
-            if (jarName != null) {
-                // 如果项目分module，此时其他module代码可能已经被打成jar
-                if (PluginUtils.inProjectList(jarName)) {
-                    PluginUtils.addClassPath(className);
-                }
-            } else {
+            if (isUserCode) {
                 PluginUtils.addClassPath(className);
             }
         }
