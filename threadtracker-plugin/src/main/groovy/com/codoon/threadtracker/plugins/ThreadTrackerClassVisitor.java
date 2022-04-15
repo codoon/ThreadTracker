@@ -23,7 +23,7 @@ class ThreadTrackerClassVisitor extends ClassVisitor implements Opcodes {
     private String jarName = null; // 不是jar包则为空
 
     public ThreadTrackerClassVisitor(ClassVisitor cv, String jarName) {
-        super(Opcodes.ASM5, cv);
+        super(Opcodes.ASM6, cv);
         this.jarName = jarName;
     }
 
@@ -89,12 +89,12 @@ class ThreadTrackerClassVisitor extends ClassVisitor implements Opcodes {
         }
 
         if (changingSuper) { // 改继承
-            mv = new ChangeSuperMethodVisitor(ASM5, mv, className);
+            mv = new ChangeSuperMethodVisitor(ASM6, mv, className);
         } else {
             if (buildingPackage && name0.equals("buildPackageList")) {
-                mv = new AddPackageMethodVisitor(ASM5, mv);
+                mv = new AddPackageMethodVisitor(ASM6, mv);
             } else {
-                mv = new ChangeProxyMethodVisitor(ASM5, mv, className);
+                mv = new ChangeProxyMethodVisitor(ASM6, mv, className);
             }
         }
 

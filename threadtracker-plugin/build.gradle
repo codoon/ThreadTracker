@@ -10,7 +10,9 @@ dependencies {
     implementation localGroovy()
 
     // 不能太高，以免和用户as或项目冲突
-    implementation 'com.android.tools.build:gradle:3.0.0'
+    implementation 'com.android.tools.build:gradle:4.2.0'
+
+    testImplementation 'junit:junit:4.12'
 }
 
 repositories {
@@ -24,7 +26,7 @@ uploadArchives {
             repository(url: uri('../repositories'))
             pom.groupId = 'com.codoon.threadtracker'
             pom.artifactId = 'threadtracker-plugin'
-            pom.version = '1.1.0'
+            pom.version = '1.2.0'
         }
     }
 }
@@ -37,5 +39,10 @@ publish {
     publishVersion = '1.1.0'
     desc = 'thread tracing plugin for android'
     website = 'https://github.com/codoon/ThreadTracker'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
