@@ -14,7 +14,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.android.tools.build:gradle:4.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.codoon.threadtracker:threadtracker-plugin:$threadtracker"
         classpath 'com.novoda:bintray-release:0.8.1'
