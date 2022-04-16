@@ -21,10 +21,15 @@ import java.util.zip.ZipEntry
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES
 
 class ThreadTrackerTransform extends Transform implements Plugin<Project> {
-    private final String VERSION = "1.1.0"
+    private final String VERSION = "1.2.0"
+    private final String LIB = "threadtracker"
+
+    private Project project;
 
     @Override
     void apply(Project project) {
+        this.project = project;
+
         System.out.println("hello ThreadTrackerPlugin")
         project.getRootProject().getSubprojects().each { subProject ->
             PluginUtils.addProjectName(subProject.name)
@@ -74,6 +79,7 @@ class ThreadTrackerTransform extends Transform implements Plugin<Project> {
         println 'transform threads...'
         JarInput threadtrackerJarInput = null
 
+        println("inputs size : ${inputs.size()}")
         inputs.each { TransformInput input ->
 
             input.directoryInputs.each { DirectoryInput directoryInput ->
@@ -81,17 +87,62 @@ class ThreadTrackerTransform extends Transform implements Plugin<Project> {
             }
 
             input.jarInputs.each { JarInput jarInput ->
-                // com.codoon.threadtracker:threadtracker:1.0.0
-                if (jarInput.file.getAbsolutePath().endsWith(".jar") && jarInput.name.startsWith("com.codoon.threadtracker:threadtracker")) {
-                    int colonIndex = jarInput.name.lastIndexOf(":")
-                    String version = jarInput.name.substring(colonIndex + 1)
-                    if (version != VERSION) {
-                        throw new RuntimeException("version mismatching: please use com.codoon.threadtracker:threadtracker:" + VERSION)
+
+                def absolutePath = jarInput.file.getAbsolutePath()
+//                println('>>> found threadtracker jar file: ' + jarInput.name + " ||  "+ absolutePath)
+
+
+                if (absolutePath.contains(LIB) || jarInput.name.contains(LIB)) {
+                    if (GrvUtils.compareVersion(project.gradle.gradleVersion, "4.0.0") < 0) {
+                        // com.codoon.threadtracker:threadtracker:1.0.0
+                        if (absolutePath.endsWith(".jar") && jarInput.name.startsWith("com.codoon.threadtracker:threadtracker")) {
+                            int colonIndex = jarInput.name.lastIndexOf(":")
+                            String version = jarInput.name.substring(colonIndex + 1)
+                            if (version != VERSION) {
+                                throw new RuntimeException("version mismatching: please use com.codoon.threadtracker:threadtracker:" + VERSION)
+                            }
+                            threadtrackerJarInput = jarInput
+                        } else {
+                            handleJarInputs(jarInput, outputProvider)
+                        }
+                    } else {
+                        // 4.0
+                        // >>> found threadtracker jar file: 18c1eae82c306df20e6e041e7687463877d700b8 ||
+                        // transforms-2/files-2.1/8c26f65926dc52e4992a4618f046b585/threadtracker-1.1.3-runtime.jar
+
+                        // 4.2
+                        // Already transformed jar :
+                        //  jar file: jetified-threadtracker-1.1.3-runtime_93e37613 ||
+                        //  build/intermediates/transforms/WMRouter/junoUat/debug/1136.jar
+
+                        def info = LIB
+                        if (jarInput.name.contains("threadtracker")) {
+                            info = jarInput.name;
+                        } else {
+                            def fullPath = absolutePath
+                            def pos = fullPath.lastIndexOf("/")
+                            if (pos >= 0) {
+                                def last = fullPath.substring(pos + 1)
+                                if (last.contains("threadtracker")) {
+                                    info = last
+                                }
+                            }
+                        }
+
+                        String version = GrvUtils.extractVersion(info)
+                        if (!version.isEmpty()) {
+                            if (version != VERSION) {
+                                throw new RuntimeException("version mismatching: please use com.codoon.threadtracker:threadtracker:" + VERSION)
+                            }
+                        }
+                        println("applied version $version")
+
+                        threadtrackerJarInput = jarInput
                     }
-                    threadtrackerJarInput = jarInput
                 } else {
                     handleJarInputs(jarInput, outputProvider)
                 }
+
             }
         }
 
